@@ -191,19 +191,39 @@ Amount,V1,V2,V3,...,V28
 - **Batch Processing**: ~0.5 seconds per 100 transactions
 - **SHAP Explanations**: ~0.3 seconds per transaction
 
+## 📚 Documentation
+
+### Development Logbook
+This project includes a comprehensive development logbook (`LOGBOOK_ENTRIES.md`) documenting 14 weeks of development work, including:
+- Weekly objectives and tasks
+- Technical decisions and challenges
+- Model development iterations
+- Testing and optimization efforts
+
+This logbook demonstrates the systematic development process and is valuable for understanding the project's evolution.
+
 ## 🛠️ Development
 
 ### Project Structure
 ```
 online-payment-fraud-detection/
 ├── app/                    # Main application code
+│   ├── models/            # ML model implementations
+│   ├── routes/            # API endpoints
+│   ├── templates/         # HTML templates
+│   └── static/            # CSS and JavaScript files
 ├── ml_pipeline/           # Machine learning pipeline
-├── models/                # Trained model files
+│   └── train_models.py    # Main training script
+├── scripts/               # Development and utility scripts
+├── models/                # Trained model files (.pkl, .h5)
 ├── data/                  # Data storage
-├── results/               # Analysis results
+│   ├── raw/              # Raw dataset
+│   └── processed/        # Processed data
+├── results/               # Analysis results (generated at runtime)
 ├── requirements.txt       # Python dependencies
 ├── run.py                # Application entry point
-└── README.md             # This file
+├── README.md             # This file
+└── LOGBOOK_ENTRIES.md    # Development logbook (14 weeks)
 ```
 
 ### Adding New Features
@@ -284,6 +304,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **TensorFlow/Keras**: For deep learning capabilities
 - **scikit-learn**: For traditional ML algorithms
 - **Pandas/NumPy**: For data processing
+
+## 📖 Additional Documentation
+
+- **LOGBOOK_ENTRIES.md**: Complete 14-week development logbook
+- **RESUME_PROJECT_DESCRIPTION.md**: Project description for portfolio/resume
+- **LICENSE**: MIT License
 
 ## 📞 Support
 
