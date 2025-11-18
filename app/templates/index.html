@@ -1,0 +1,277 @@
+<!-- app/templates/index.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- Enhanced Header -->
+    <div class="dashboard-header">
+        <h1>🚀 Advanced Hybrid Fraud Detection System</h1>
+        <p class="subtitle">AI-Powered LSTM + Decision Tree Model with Real-time Explainability</p>
+        <div class="status-indicators">
+            <span class="status-badge" id="system-status">Loading...</span>
+            <span class="status-badge" id="model-status">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Real-time Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card primary">
+            <div class="stat-icon">📊</div>
+            <h3>Total Predictions</h3>
+            <div class="stat-number" id="total-predictions">0</div>
+            <div class="stat-trend" id="prediction-trend">+0 today</div>
+        </div>
+        <div class="stat-card danger">
+            <div class="stat-icon">⚠️</div>
+            <h3>Fraud Detected</h3>
+            <div class="stat-number" id="fraud-count">0</div>
+            <div class="stat-trend" id="fraud-trend">+0 today</div>
+        </div>
+        <div class="stat-card success">
+            <div class="stat-icon">🎯</div>
+            <h3>System Accuracy</h3>
+            <div class="stat-number" id="accuracy">98.4%</div>
+            <div class="stat-trend">Hybrid Model</div>
+        </div>
+        <div class="stat-card info">
+            <div class="stat-icon">⚡</div>
+            <h3>Response Time</h3>
+            <div class="stat-number" id="response-time">0.15s</div>
+            <div class="stat-trend">Real-time</div>
+        </div>
+    </div>
+
+    <!-- Risk Distribution Chart -->
+    <div class="chart-container">
+        <div class="chart-card">
+            <h3>Risk Distribution</h3>
+            <div class="risk-chart" id="risk-chart">
+                <div class="risk-bar">
+                    <div class="risk-segment low-risk" id="low-risk-bar"></div>
+                    <div class="risk-segment medium-risk" id="medium-risk-bar"></div>
+                    <div class="risk-segment high-risk" id="high-risk-bar"></div>
+                </div>
+                <div class="risk-legend">
+                    <span class="legend-item"><span class="legend-color low-risk"></span> Low Risk</span>
+                    <span class="legend-item"><span class="legend-color medium-risk"></span> Medium Risk</span>
+                    <span class="legend-item"><span class="legend-color high-risk"></span> High Risk</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Actions Grid -->
+    <div class="actions-grid">
+        <div class="action-card primary">
+            <div class="action-icon">🔍</div>
+            <h3>Real-time Transaction Check</h3>
+            <p>Check individual transactions with detailed explanations and feature analysis</p>
+            <div class="action-features">
+                <span class="feature-tag">Manual Input</span>
+                <span class="feature-tag">Explainable AI</span>
+                <span class="feature-tag">Real-time</span>
+            </div>
+            <a href="/single-prediction" class="btn btn-primary">Check Transaction</a>
+        </div>
+        
+        <div class="action-card secondary">
+            <div class="action-icon">📊</div>
+            <h3>Batch Analysis</h3>
+            <p>Upload CSV files for comprehensive fraud analysis with advanced cleaning</p>
+            <div class="action-features">
+                <span class="feature-tag">CSV Upload</span>
+                <span class="feature-tag">Auto Cleaning</span>
+                <span class="feature-tag">Analytics</span>
+            </div>
+            <a href="/batch-upload" class="btn btn-secondary">Upload File</a>
+        </div>
+        
+        <div class="action-card info">
+            <div class="action-icon">🤖</div>
+            <h3>Model Analytics</h3>
+            <p>Compare LSTM vs Decision Tree performance and view detailed insights</p>
+            <div class="action-features">
+                <span class="feature-tag">Model Comparison</span>
+                <span class="feature-tag">Performance Metrics</span>
+                <span class="feature-tag">Trends</span>
+            </div>
+            <a href="/analytics" class="btn btn-info">View Analytics</a>
+        </div>
+        
+        <div class="action-card warning">
+            <div class="action-icon">⚙️</div>
+            <h3>System Settings</h3>
+            <p>Configure thresholds, model parameters, and system preferences</p>
+            <div class="action-features">
+                <span class="feature-tag">Thresholds</span>
+                <span class="feature-tag">Parameters</span>
+                <span class="feature-tag">Configuration</span>
+            </div>
+            <button class="btn btn-warning" onclick="openSettings()">Settings</button>
+        </div>
+    </div>
+
+    <!-- Model Information Section -->
+    <div class="info-section">
+        <h3>🧠 Hybrid Model Architecture</h3>
+        <div class="model-info-grid">
+            <div class="model-card">
+                <h4>LSTM Neural Network</h4>
+                <ul>
+                    <li><strong>Purpose:</strong> Temporal pattern detection</li>
+                    <li><strong>Strengths:</strong> Sequential behavior analysis</li>
+                    <li><strong>Use Case:</strong> Complex fraud patterns</li>
+                </ul>
+            </div>
+            <div class="model-card">
+                <h4>Decision Tree</h4>
+                <ul>
+                    <li><strong>Purpose:</strong> Rule-based classification</li>
+                    <li><strong>Strengths:</strong> Interpretability & speed</li>
+                    <li><strong>Use Case:</strong> Clear decision boundaries</li>
+                </ul>
+            </div>
+            <div class="model-card">
+                <h4>Hybrid Fusion</h4>
+                <ul>
+                    <li><strong>Method:</strong> Dynamic weighted averaging</li>
+                    <li><strong>Formula:</strong> P_final = α×P_LSTM + (1-α)×P_DT</li>
+                    <li><strong>Adaptive:</strong> α adjusts based on data patterns</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="recent-activity">
+        <h3>📈 Recent Activity</h3>
+        <div class="activity-list" id="recent-activity-list">
+            <div class="activity-item">
+                <span class="activity-time">Just now</span>
+                <span class="activity-text">System initialized successfully</span>
+                <span class="activity-status success">✓</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Settings Modal -->
+<div id="settings-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeSettings()">&times;</span>
+        <h2>System Settings</h2>
+        <div class="settings-form">
+            <div class="form-group">
+                <label for="fraud-threshold">Fraud Detection Threshold</label>
+                <input type="range" id="fraud-threshold" min="0.1" max="0.9" step="0.1" value="0.5">
+                <span id="threshold-value">0.5</span>
+            </div>
+            <div class="form-group">
+                <label for="alpha-weight">LSTM Weight (α)</label>
+                <input type="range" id="alpha-weight" min="0.1" max="0.9" step="0.1" value="0.6">
+                <span id="alpha-value">0.6</span>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="explainability" checked>
+                    Enable Explainability
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="adaptive-threshold" checked>
+                    Enable Adaptive Threshold
+                </label>
+            </div>
+            <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Enhanced dashboard functionality
+document.addEventListener('DOMContentLoaded', function() {
+    loadDashboardData();
+    setInterval(loadDashboardData, 30000); // Update every 30 seconds
+});
+
+async function loadDashboardData() {
+    try {
+        const response = await fetch('/api/v1/analytics/dashboard');
+        const data = await response.json();
+        
+        if (data.success) {
+            updateDashboard(data.dashboard_metrics);
+            updateSystemStatus(data.model_status);
+        }
+    } catch (error) {
+        console.error('Failed to load dashboard data:', error);
+    }
+}
+
+function updateDashboard(metrics) {
+    document.getElementById('total-predictions').textContent = metrics.total_predictions.toLocaleString();
+    document.getElementById('fraud-count').textContent = metrics.fraud_detected.toLocaleString();
+    document.getElementById('accuracy').textContent = (metrics.fraud_rate * 100).toFixed(1) + '%';
+    
+    // Update risk distribution
+    const riskDist = metrics.risk_distribution;
+    const total = riskDist.low_risk + riskDist.medium_risk + riskDist.high_risk;
+    
+    if (total > 0) {
+        document.getElementById('low-risk-bar').style.width = (riskDist.low_risk / total * 100) + '%';
+        document.getElementById('medium-risk-bar').style.width = (riskDist.medium_risk / total * 100) + '%';
+        document.getElementById('high-risk-bar').style.width = (riskDist.high_risk / total * 100) + '%';
+    }
+}
+
+function updateSystemStatus(modelStatus) {
+    const systemStatus = document.getElementById('system-status');
+    const modelStatusEl = document.getElementById('model-status');
+    
+    systemStatus.textContent = 'System Online';
+    systemStatus.className = 'status-badge success';
+    
+    if (modelStatus.hybrid_model_available) {
+        modelStatusEl.textContent = 'Hybrid Model Ready';
+        modelStatusEl.className = 'status-badge success';
+    } else {
+        modelStatusEl.textContent = 'Model Loading...';
+        modelStatusEl.className = 'status-badge warning';
+    }
+}
+
+function openSettings() {
+    document.getElementById('settings-modal').style.display = 'block';
+}
+
+function closeSettings() {
+    document.getElementById('settings-modal').style.display = 'none';
+}
+
+function saveSettings() {
+    const threshold = document.getElementById('fraud-threshold').value;
+    const alpha = document.getElementById('alpha-weight').value;
+    const explainability = document.getElementById('explainability').checked;
+    const adaptive = document.getElementById('adaptive-threshold').checked;
+    
+    // Save settings (in a real app, this would be sent to the backend)
+    localStorage.setItem('fraud-threshold', threshold);
+    localStorage.setItem('alpha-weight', alpha);
+    localStorage.setItem('explainability', explainability);
+    localStorage.setItem('adaptive-threshold', adaptive);
+    
+    closeSettings();
+    alert('Settings saved successfully!');
+}
+
+// Update threshold display
+document.getElementById('fraud-threshold').addEventListener('input', function() {
+    document.getElementById('threshold-value').textContent = this.value;
+});
+
+document.getElementById('alpha-weight').addEventListener('input', function() {
+    document.getElementById('alpha-value').textContent = this.value;
+});
+</script>
+{% endblock %}

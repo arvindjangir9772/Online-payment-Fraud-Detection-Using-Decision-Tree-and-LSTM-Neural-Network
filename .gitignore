@@ -1,0 +1,140 @@
+# ============================================
+# Python
+# ============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ============================================
+# Virtual Environment
+# ============================================
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv
+
+# ============================================
+# IDE & Editors
+# ============================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# ============================================
+# Jupyter Notebook
+# ============================================
+.ipynb_checkpoints
+*.ipynb
+
+# ============================================
+# Environment Variables
+# ============================================
+.env
+.env.local
+.env.*.local
+
+# ============================================
+# Database Files
+# ============================================
+*.db
+*.sqlite
+*.sqlite3
+transaction_history.db
+
+# ============================================
+# Model Files (Large Binary Files)
+# ============================================
+# Uncomment the lines below if you want to ignore model files
+# and have users train their own models
+# *.pkl
+# *.h5
+# *.hdf5
+# *.joblib
+
+# If you want to keep model files but use Git LFS, keep them tracked
+# and set up Git LFS: git lfs track "*.pkl" "*.h5"
+
+# ============================================
+# Data Files
+# ============================================
+# Raw data files (usually large and shouldn't be in repo)
+data/raw/
+*.csv
+!data/processed/processed_data.csv  # Keep processed data if needed
+
+# ============================================
+# Logs & Results
+# ============================================
+*.log
+logs/
+results/logs/
+results/predictions/
+results/reports/
+results/figures/
+
+# ============================================
+# OS Files
+# ============================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ============================================
+# Testing & Coverage
+# ============================================
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# ============================================
+# Temporary Files
+# ============================================
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+
+# ============================================
+# Empty Directories (Optional - add .gitkeep if needed)
+# ============================================
+# ml_pipeline/models/  # Add .gitkeep if you want to preserve structure

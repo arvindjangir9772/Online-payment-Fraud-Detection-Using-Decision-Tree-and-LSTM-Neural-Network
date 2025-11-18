@@ -1,0 +1,37 @@
+<!-- app/templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Fraud Detection System{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 Fraud Detection System</h1>
+            <p>Real-time Online Payment Fraud Detection using Machine Learning</p>
+        </header>
+
+        <nav class="navbar">
+            <a href="/" class="nav-link">Dashboard</a>
+            <a href="/single-prediction" class="nav-link">Single Check</a>
+            <a href="/batch-upload" class="nav-link">Batch Upload</a>
+            <a href="/api/docs" class="nav-link" target="_blank">API Docs</a>
+        </nav>
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Fraud Detection System | Powered by Decision Tree & LSTM</p>
+        </footer>
+    </div>
+
+    <script src="/static/js/dashboard.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

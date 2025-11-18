@@ -1,0 +1,39 @@
+{
+  "training_date": "2025-10-12T16:59:45.227061",
+  "models_trained": [
+    "decision_tree",
+    "lstm"
+  ],
+  "performance": {
+    "decision_tree": {
+      "auc_score": 0.9069144516772267,
+      "confusion_matrix": [
+        [
+          49896,
+          436
+        ],
+        [
+          9,
+          68
+        ]
+      ]
+    },
+    "lstm": {
+      "auc_score": 0.9837804252490733,
+      "confusion_matrix": [
+        [
+          50317,
+          15
+        ],
+        [
+          10,
+          67
+        ]
+      ]
+    }
+  },
+  "model_comparison": {
+    "best_model": "lstm",
+    "auc_difference": 0.07686597357184655
+  }
+}

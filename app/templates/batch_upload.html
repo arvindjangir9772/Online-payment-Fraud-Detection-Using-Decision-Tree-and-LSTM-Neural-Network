@@ -1,0 +1,1033 @@
+<!-- app/templates/batch_upload.html -->
+{% extends "base.html" %}
+
+{% block title %}Advanced Batch Analysis - Hybrid Fraud Detection{% endblock %}
+
+{% block extra_css %}
+<style>
+    .upload-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .upload-section {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        margin-bottom: 30px;
+    }
+    
+    .upload-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .upload-header h2 {
+        color: #333;
+        font-size: 2.2em;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+    
+    .upload-header p {
+        color: #666;
+        font-size: 1.1em;
+    }
+    
+    .upload-area {
+        border: 3px dashed #e1e5e9;
+        border-radius: 15px;
+        padding: 60px 40px;
+        text-align: center;
+        margin: 30px 0;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        background: rgba(248, 249, 250, 0.5);
+    }
+    
+    .upload-area:hover {
+        border-color: #667eea;
+        background: rgba(102, 126, 234, 0.05);
+        transform: translateY(-2px);
+    }
+    
+    .upload-area.dragover {
+        border-color: #667eea;
+        background: rgba(102, 126, 234, 0.1);
+        transform: scale(1.02);
+    }
+    
+    .upload-icon {
+        font-size: 4em;
+        color: #667eea;
+        margin-bottom: 20px;
+        display: block;
+    }
+    
+    .upload-text h3 {
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 1.5em;
+    }
+    
+    .upload-text p {
+        color: #666;
+        margin-bottom: 20px;
+    }
+    
+    .file-input {
+        display: none;
+    }
+    
+    .file-info {
+        background: rgba(248, 249, 250, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+        display: none;
+        border-left: 4px solid #667eea;
+    }
+    
+    .file-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 15px 0;
+    }
+    
+    .file-detail {
+        text-align: center;
+    }
+    
+    .file-detail-label {
+        font-size: 0.9em;
+        color: #666;
+        margin-bottom: 5px;
+    }
+    
+    .file-detail-value {
+        font-size: 1.2em;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .analysis-options {
+        background: rgba(248, 249, 250, 0.8);
+        padding: 25px;
+        border-radius: 10px;
+        margin: 20px 0;
+        border-left: 4px solid #17a2b8;
+    }
+    
+    .analysis-options h4 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+    }
+    
+    .options-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    
+    .option-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .option-group label {
+        font-weight: 600;
+        color: #333;
+        font-size: 0.95em;
+    }
+    
+    .option-group input,
+    .option-group select {
+        padding: 10px;
+        border: 2px solid #e1e5e9;
+        border-radius: 8px;
+        font-size: 1em;
+        transition: all 0.3s ease;
+    }
+    
+    .option-group input:focus,
+    .option-group select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .results-section {
+        display: none;
+        margin-top: 30px;
+    }
+    
+    .results-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .results-header h3 {
+        color: #333;
+        font-size: 1.8em;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+    
+    .summary-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .summary-card {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 25px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #667eea;
+        transition: transform 0.3s ease;
+    }
+    
+    .summary-card:hover {
+        transform: translateY(-3px);
+    }
+    
+    .summary-card.primary {
+        border-left-color: #667eea;
+    }
+    
+    .summary-card.danger {
+        border-left-color: #e74c3c;
+    }
+    
+    .summary-card.success {
+        border-left-color: #27ae60;
+    }
+    
+    .summary-card.info {
+        border-left-color: #17a2b8;
+    }
+    
+    .summary-number {
+        font-size: 2.5em;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #333;
+    }
+    
+    .summary-label {
+        color: #666;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+    }
+    
+    .risk-distribution {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        margin: 20px 0;
+    }
+    
+    .risk-distribution h4 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+    }
+    
+    .risk-bars {
+        display: flex;
+        height: 30px;
+        border-radius: 15px;
+        overflow: hidden;
+        margin: 15px 0;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .risk-bar {
+        transition: width 0.8s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 0.9em;
+    }
+    
+    .risk-bar.low {
+        background: linear-gradient(90deg, #27ae60, #2ecc71);
+    }
+    
+    .risk-bar.medium {
+        background: linear-gradient(90deg, #f39c12, #e67e22);
+    }
+    
+    .risk-bar.high {
+        background: linear-gradient(90deg, #e74c3c, #c0392b);
+    }
+    
+    .risk-legend {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        font-size: 0.9em;
+        color: #666;
+    }
+    
+    .results-table-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin: 20px 0;
+    }
+    
+    .results-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .results-table th {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 15px 12px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.9em;
+    }
+    
+    .results-table td {
+        padding: 12px;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 0.9em;
+    }
+    
+    .results-table tbody tr:hover {
+        background: rgba(102, 126, 234, 0.05);
+    }
+    
+    .fraud-row {
+        background: rgba(231, 76, 60, 0.05);
+        border-left: 3px solid #e74c3c;
+    }
+    
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 0.8em;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .status-badge.fraud {
+        background: rgba(231, 76, 60, 0.1);
+        color: #e74c3c;
+    }
+    
+    .status-badge.safe {
+        background: rgba(39, 174, 96, 0.1);
+        color: #27ae60;
+    }
+    
+    .probability-cell {
+        text-align: center;
+        font-weight: 600;
+    }
+    
+    .probability-cell.high {
+        color: #e74c3c;
+    }
+    
+    .probability-cell.medium {
+        color: #f39c12;
+    }
+    
+    .probability-cell.low {
+        color: #27ae60;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin: 30px 0;
+        flex-wrap: wrap;
+    }
+    
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    
+    .loading-content {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .info-section {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        margin-top: 30px;
+    }
+    
+    .info-section h3 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 1.5em;
+    }
+    
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-top: 20px;
+    }
+    
+    .info-card {
+        background: rgba(248, 249, 250, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #667eea;
+    }
+    
+    .info-card h4 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.1em;
+    }
+    
+    .info-card ul {
+        margin-left: 0;
+        list-style: none;
+    }
+    
+    .info-card li {
+        margin-bottom: 8px;
+        padding-left: 20px;
+        position: relative;
+    }
+    
+    .info-card li::before {
+        content: '▶';
+        position: absolute;
+        left: 0;
+        color: #667eea;
+        font-size: 0.8em;
+    }
+    
+    @media (max-width: 768px) {
+        .upload-area {
+            padding: 40px 20px;
+        }
+        
+        .summary-cards {
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .options-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .file-details {
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+    <div class="upload-section">
+        <div class="upload-header">
+            <h2>📊 Advanced Batch Analysis</h2>
+            <p>Upload CSV files for comprehensive fraud analysis using our hybrid LSTM + Decision Tree model</p>
+        </div>
+        
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">
+                <h3>Drop your CSV file here or click to browse</h3>
+                <p>Supported format: CSV with transaction data (V1-V28, Amount, etc.)</p>
+                <input type="file" id="fileInput" class="file-input" accept=".csv">
+                <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                    Choose File
+                </button>
+            </div>
+        </div>
+        
+        <div class="file-info" id="fileInfo">
+            <h4>📄 File Information</h4>
+            <div class="file-details">
+                <div class="file-detail">
+                    <div class="file-detail-label">Filename</div>
+                    <div class="file-detail-value" id="fileName">-</div>
+                </div>
+                <div class="file-detail">
+                    <div class="file-detail-label">Size</div>
+                    <div class="file-detail-value" id="fileSize">-</div>
+                </div>
+                <div class="file-detail">
+                    <div class="file-detail-label">Type</div>
+                    <div class="file-detail-value" id="fileType">-</div>
+                </div>
+                <div class="file-detail">
+                    <div class="file-detail-label">Status</div>
+                    <div class="file-detail-value" id="fileStatus">Ready</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="analysis-options">
+            <h4>⚙️ Analysis Options</h4>
+            <div class="options-grid">
+                <div class="option-group">
+                    <label for="threshold">Fraud Detection Threshold</label>
+                    <input type="range" id="threshold" min="0.1" max="0.9" step="0.1" value="0.5">
+                    <span id="thresholdValue">0.5</span>
+                </div>
+                <div class="option-group">
+                    <label for="explanation">Include Explanations</label>
+                    <select id="explanation">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label for="insights">Include Data Insights</label>
+                    <select id="insights">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label for="maxResults">Max Results to Display</label>
+                    <select id="maxResults">
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
+                        <option value="500">500</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button type="button" class="btn btn-success" id="analyzeBtn" style="display: none;">
+                🚀 Analyze Transactions
+            </button>
+            <button type="button" class="btn btn-info" id="validateBtn" style="display: none;">
+                🔍 Validate File
+            </button>
+            <button type="button" class="btn btn-secondary" id="clearBtn">
+                🗑️ Clear
+            </button>
+        </div>
+    </div>
+
+    <div class="results-section" id="resultsSection">
+        <div class="results-header">
+            <h3>🎯 Analysis Results</h3>
+        </div>
+        
+        <div class="summary-cards" id="summaryCards">
+            <!-- Dynamic summary cards -->
+        </div>
+        
+        <div class="risk-distribution" id="riskDistribution">
+            <h4>Risk Distribution</h4>
+            <div class="risk-bars">
+                <div class="risk-bar low" id="lowRiskBar" style="width: 0%"></div>
+                <div class="risk-bar medium" id="mediumRiskBar" style="width: 0%"></div>
+                <div class="risk-bar high" id="highRiskBar" style="width: 0%"></div>
+            </div>
+            <div class="risk-legend">
+                <span>Low Risk (0-30%)</span>
+                <span>Medium Risk (30-70%)</span>
+                <span>High Risk (70-100%)</span>
+            </div>
+        </div>
+        
+        <div class="results-table-container">
+            <table class="results-table" id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Amount</th>
+                        <th>Fraud Probability</th>
+                        <th>Status</th>
+                        <th>Dominant Model</th>
+                        <th>Confidence</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody">
+                    <!-- Dynamic results -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-primary" id="downloadBtn" style="display: none;">
+                📥 Download Results as CSV
+            </button>
+            <button class="btn btn-info" id="exportJsonBtn" style="display: none;">
+                📊 Export as JSON
+            </button>
+            <button class="btn btn-warning" id="viewAnalyticsBtn" style="display: none;">
+                📈 View Analytics
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+        <div class="spinner"></div>
+        <h3>Analyzing Transactions...</h3>
+        <p>Our hybrid model is processing your data</p>
+    </div>
+</div>
+
+<div class="info-section">
+    <h3>📋 CSV File Requirements & Guidelines</h3>
+    
+    <div class="info-grid">
+        <div class="info-card">
+            <h4>Required Columns</h4>
+            <ul>
+                <li><code>Amount</code> - Transaction amount (required)</li>
+                <li><code>V1, V2, V3, ... V28</code> - Principal component features</li>
+                <li>Missing V features will be filled with 0.0</li>
+            </ul>
+        </div>
+        
+        <div class="info-card">
+            <h4>Data Format</h4>
+            <ul>
+                <li>CSV format with comma separators</li>
+                <li>First row should contain column headers</li>
+                <li>Numeric values only for Amount and V features</li>
+                <li>Missing values will be auto-filled</li>
+            </ul>
+        </div>
+        
+        <div class="info-card">
+            <h4>File Size Limits</h4>
+            <ul>
+                <li>Maximum file size: 50MB</li>
+                <li>Recommended: 1,000 - 10,000 transactions</li>
+                <li>Larger files may take longer to process</li>
+            </ul>
+        </div>
+        
+        <div class="info-card">
+            <h4>Sample Format</h4>
+            <pre style="font-size: 0.8em; background: #f8f9fa; padding: 10px; border-radius: 5px;">
+Amount,V1,V2,V3,...,V28
+149.62,-1.359807,-0.072781,2.536347,...,-0.021053
+25.75,1.191857,0.266151,0.166480,...,0.014724
+            </pre>
+        </div>
+    </div>
+    
+    <p style="margin-top: 20px; padding: 15px; background: rgba(102, 126, 234, 0.1); border-radius: 8px; border-left: 4px solid #667eea;">
+        💡 <strong>Tip:</strong> Use the sample data from the Single Check page to understand the expected format. 
+        Our system will automatically clean and preprocess your data before analysis.
+    </p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const validateBtn = document.getElementById('validateBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const resultsSection = document.getElementById('resultsSection');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const thresholdSlider = document.getElementById('threshold');
+    const thresholdValue = document.getElementById('thresholdValue');
+    
+    let currentFile = null;
+    let analysisResults = null;
+    
+    // Update threshold display
+    thresholdSlider.addEventListener('input', function() {
+        thresholdValue.textContent = this.value;
+    });
+    
+    // Drag and drop functionality
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+    
+    uploadArea.addEventListener('dragleave', function() {
+        uploadArea.classList.remove('dragover');
+    });
+    
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFileSelection(files[0]);
+        }
+    });
+    
+    // File input change
+    fileInput.addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            handleFileSelection(e.target.files[0]);
+        }
+    });
+    
+    // Click upload area to trigger file input
+    uploadArea.addEventListener('click', function() {
+        fileInput.click();
+    });
+    
+    function handleFileSelection(file) {
+        if (file && file.name.endsWith('.csv')) {
+            currentFile = file;
+            
+            // Update file info
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileSize').textContent = formatFileSize(file.size);
+            document.getElementById('fileType').textContent = file.type || 'text/csv';
+            document.getElementById('fileStatus').textContent = 'Ready for analysis';
+            
+            fileInfo.style.display = 'block';
+            analyzeBtn.style.display = 'inline-block';
+            validateBtn.style.display = 'inline-block';
+            
+            showNotification('✅ File selected successfully!', 'success');
+        } else {
+            showNotification('❌ Please select a CSV file.', 'error');
+        }
+    }
+    
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    
+    // Validate file
+    validateBtn.addEventListener('click', async function() {
+        if (!currentFile) return;
+        
+        showLoading(true, 'Validating file...');
+        
+        try {
+            const formData = new FormData();
+            formData.append('file', currentFile);
+            
+            const response = await fetch('/api/v1/upload/validate', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (result.valid) {
+                showNotification('✅ File validation passed!', 'success');
+                document.getElementById('fileStatus').textContent = 'Validated ✓';
+            } else {
+                showNotification('⚠️ File validation issues: ' + result.issues.join(', '), 'warning');
+                document.getElementById('fileStatus').textContent = 'Validation Issues';
+            }
+            
+        } catch (error) {
+            console.error('Validation error:', error);
+            showNotification('❌ Error validating file: ' + error.message, 'error');
+        } finally {
+            showLoading(false);
+        }
+    });
+    
+    // Analyze transactions
+    analyzeBtn.addEventListener('click', async function() {
+        if (!currentFile) return;
+        
+        showLoading(true, 'Analyzing transactions...');
+        
+        try {
+            const formData = new FormData();
+            formData.append('file', currentFile);
+            
+            const threshold = thresholdSlider.value;
+            const explanation = document.getElementById('explanation').value === 'true';
+            const insights = document.getElementById('insights').value === 'true';
+            
+            const url = `/api/v1/upload/hybrid?with_explanation=${explanation}&threshold=${threshold}&include_insights=${insights}`;
+            
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            analysisResults = result;
+            
+            if (result.success) {
+                displayResults(result);
+                showNotification('✅ Analysis completed successfully!', 'success');
+            } else {
+                throw new Error(result.error || 'Analysis failed');
+            }
+            
+        } catch (error) {
+            console.error('Analysis error:', error);
+            showNotification('❌ Error analyzing file: ' + error.message, 'error');
+        } finally {
+            showLoading(false);
+        }
+    });
+    
+    function displayResults(result) {
+        resultsSection.style.display = 'block';
+        
+        // Display summary cards
+        const analytics = result.prediction_analytics;
+        const summaryCards = document.getElementById('summaryCards');
+        
+        summaryCards.innerHTML = `
+            <div class="summary-card primary">
+                <div class="summary-number">${analytics.total_transactions}</div>
+                <div class="summary-label">Total Transactions</div>
+            </div>
+            <div class="summary-card danger">
+                <div class="summary-number">${analytics.fraud_count}</div>
+                <div class="summary-label">Fraud Detected</div>
+            </div>
+            <div class="summary-card info">
+                <div class="summary-number">${(analytics.fraud_rate * 100).toFixed(1)}%</div>
+                <div class="summary-label">Fraud Rate</div>
+            </div>
+            <div class="summary-card success">
+                <div class="summary-number">${analytics.risk_distribution.low_risk}</div>
+                <div class="summary-label">Low Risk</div>
+            </div>
+        `;
+        
+        // Update risk distribution
+        const riskDist = analytics.risk_distribution;
+        const total = riskDist.low_risk + riskDist.medium_risk + riskDist.high_risk;
+        
+        if (total > 0) {
+            document.getElementById('lowRiskBar').style.width = (riskDist.low_risk / total * 100) + '%';
+            document.getElementById('mediumRiskBar').style.width = (riskDist.medium_risk / total * 100) + '%';
+            document.getElementById('highRiskBar').style.width = (riskDist.high_risk / total * 100) + '%';
+        }
+        
+        // Display results table
+        const resultsBody = document.getElementById('resultsBody');
+        const maxResults = parseInt(document.getElementById('maxResults').value);
+        const predictions = result.predictions.slice(0, maxResults);
+        
+        resultsBody.innerHTML = '';
+        predictions.forEach((transaction, index) => {
+            const row = document.createElement('tr');
+            if (transaction.fraud_prediction === 1) {
+                row.classList.add('fraud-row');
+            }
+            
+            const probability = (transaction.fraud_probability * 100).toFixed(1);
+            const probabilityClass = probability >= 70 ? 'high' : probability >= 30 ? 'medium' : 'low';
+            
+            row.innerHTML = `
+                <td>#${index + 1}</td>
+                <td>$${transaction.Amount ? transaction.Amount.toFixed(2) : 'N/A'}</td>
+                <td class="probability-cell ${probabilityClass}">${probability}%</td>
+                <td>
+                    <span class="status-badge ${transaction.fraud_prediction === 1 ? 'fraud' : 'safe'}">
+                        ${transaction.fraud_prediction === 1 ? '🚨 FRAUD' : '✅ SAFE'}
+                    </span>
+                </td>
+                <td>${transaction.dominant_model || 'Hybrid'}</td>
+                <td>${probability}%</td>
+            `;
+            
+            resultsBody.appendChild(row);
+        });
+        
+        // Show action buttons
+        document.getElementById('downloadBtn').style.display = 'inline-block';
+        document.getElementById('exportJsonBtn').style.display = 'inline-block';
+        document.getElementById('viewAnalyticsBtn').style.display = 'inline-block';
+        
+        // Set up download functionality
+        document.getElementById('downloadBtn').onclick = () => downloadResultsAsCSV(predictions);
+        document.getElementById('exportJsonBtn').onclick = () => downloadResultsAsJSON(result);
+        document.getElementById('viewAnalyticsBtn').onclick = () => window.location.href = '/analytics';
+        
+        // Scroll to results
+        resultsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function downloadResultsAsCSV(predictions) {
+        const headers = ['Transaction', 'Amount', 'Fraud_Probability', 'Is_Fraud', 'Dominant_Model', 'Confidence'];
+        const csvContent = [
+            headers.join(','),
+            ...predictions.map((transaction, index) => [
+                `Transaction_${index + 1}`,
+                transaction.Amount || '',
+                (transaction.fraud_probability * 100).toFixed(2) + '%',
+                transaction.fraud_prediction === 1 ? 'Yes' : 'No',
+                transaction.dominant_model || 'Hybrid',
+                (transaction.fraud_probability * 100).toFixed(2) + '%'
+            ].join(','))
+        ].join('\n');
+        
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'fraud_analysis_results.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }
+    
+    function downloadResultsAsJSON(result) {
+        const jsonContent = JSON.stringify(result, null, 2);
+        const blob = new Blob([jsonContent], { type: 'application/json' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'fraud_analysis_results.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }
+    
+    // Clear form
+    clearBtn.addEventListener('click', function() {
+        fileInput.value = '';
+        currentFile = null;
+        fileInfo.style.display = 'none';
+        resultsSection.style.display = 'none';
+        analyzeBtn.style.display = 'none';
+        validateBtn.style.display = 'none';
+        showNotification('🗑️ Form cleared!', 'info');
+    });
+    
+    function showLoading(show, message = 'Processing...') {
+        if (show) {
+            loadingOverlay.querySelector('p').textContent = message;
+        }
+        loadingOverlay.style.display = show ? 'flex' : 'none';
+    }
+    
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1001;
+            animation: slideIn 0.3s ease;
+            max-width: 300px;
+        `;
+        
+        const colors = {
+            success: '#27ae60',
+            error: '#e74c3c',
+            info: '#3498db',
+            warning: '#f39c12'
+        };
+        notification.style.backgroundColor = colors[type] || colors.info;
+        
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
+    
+    // Add CSS for notifications
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+});
+</script>
+{% endblock %}
